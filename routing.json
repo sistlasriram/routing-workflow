@@ -1,0 +1,526 @@
+{
+  "name": "routing",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -320,
+        32
+      ],
+      "id": "65859198-3988-4843-bf75-64180e85efca",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kf3HbG8GlDQTKufM",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.snippet }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "high priority",
+              "description": " You are an Email Classification agent specialized in identifying HIGH PRIORITY emails. Classify an email as High Priority if it meets ANY of the following conditions: Requires immediate action or response Mentions account suspension, security alerts, breaches, legal notices, payments failures, deadlines, or urgent warnings Comes from trusted platforms (banks, cloud providers, government, legal entities) Contains words like: urgent, immediate action required, suspended, blocked, failed payment, security alert, violation, deadline DO NOT classify marketing, newsletters, or general inquiries as High Priority. Output Format: Category: High Priority"
+            },
+            {
+              "category": "customer support",
+              "description": "You are an Email Classification agent specialized in identifying CUSTOMER SUPPORT emails. Classify an email as Customer Support if it: Is a response to a user inquiry, ticket, or complaint Contains case IDs, ticket numbers, reference numbers Provides help, troubleshooting steps, or status updates Uses language such as: support, help, ticket, case, request, issue, resolved, follow-up Emails may be automated or human-written. DO NOT classify promotional or sales emails as Customer Support. Output Format: Category: Customer Support Confidence: High / Medium / Low Reason: Brief explanation identifying support-related content"
+            },
+            {
+              "category": "business",
+              "description": "You are an Email Classification agent specialized in identifying BUSINESS emails. Classify an email as Business if it: Relates to professional communication, partnerships, meetings, contracts, invoices, proposals, or internal coordination Is informational or operational rather than promotional Includes scheduling, project updates, documentation, or formal communication Uses professional tone without marketing or urgency DO NOT classify urgent alerts as High Priority or marketing emails as Promotions. Output Format: Category: Business Confidence: High / Medium / Low Reason: Brief explanation of business relevance"
+            },
+            {
+              "category": "promotion",
+              "description": "You are an Email Classification agent specialized in identifying PROMOTIONAL emails. Classify an email as Promotions if it meets ANY of the following conditions: Advertises products, services, offers, discounts, or special deals. Contains coupons, promo codes, cashback offers, or seasonal sales. Promotes marketing campaigns, product launches, or limited-time offers. Includes newsletters primarily intended to advertise products, services, or commercial offers. Encourages purchases, subscriptions, upgrades, or participation in promotional campaigns."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        -112,
+        -256
+      ],
+      "id": "69109644-6fd1-46ff-92ab-13cb8fa7fd10",
+      "name": "Text Classifier"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        -16,
+        608
+      ],
+      "id": "907761ff-2690-4982-a840-0cf71115db8b",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "uXQyvlWqWGTLulBh",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "Label_1129469179429012724"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        304,
+        -464
+      ],
+      "id": "be29ec89-d9a0-487e-8cad-0e32be7f286f",
+      "name": "high prority",
+      "webhookId": "2c093059-1e24-441d-bac7-70a8ec6f5d1c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kf3HbG8GlDQTKufM",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "Label_3593796560055692122"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        432,
+        -176
+      ],
+      "id": "17d0ce5f-cba5-4fa5-a362-0510808acc4e",
+      "name": "customer support",
+      "webhookId": "2c093059-1e24-441d-bac7-70a8ec6f5d1c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kf3HbG8GlDQTKufM",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "Label_8611897363046639004"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        384,
+        64
+      ],
+      "id": "d6e27cba-e1de-4212-8fb3-29357f584561",
+      "name": "business",
+      "webhookId": "2c093059-1e24-441d-bac7-70a8ec6f5d1c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kf3HbG8GlDQTKufM",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "addLabels",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "labelIds": [
+          "Label_8390481013250891293"
+        ]
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        400,
+        336
+      ],
+      "id": "d3861b90-a202-4c20-ad9b-84212342aaf7",
+      "name": "promotion",
+      "webhookId": "2c093059-1e24-441d-bac7-70a8ec6f5d1c",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kf3HbG8GlDQTKufM",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Gmail Trigger').item.json.snippet }}",
+        "options": {
+          "systemMessage": "You are a high priority AI agent. Your task is to send a professional auto-reply for high-priority mails.\n\n#Tools\nEmail Draft - use this to send an email reply to a customer, always sign off as SSRAIAutomation"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        608,
+        -464
+      ],
+      "id": "9bf160b3-1ae4-4c0b-84b9-cebf1a0e56c7",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ $fromAI(\"Subject\") }}",
+        "message": "={{ $fromAI(\"emailbody\") }}",
+        "options": {
+          "threadId": "={{ $json.threadId }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        688,
+        -256
+      ],
+      "id": "5af17710-381c-41db-94e5-59415339ea6c",
+      "name": "Create a draft in Gmail",
+      "webhookId": "3da2788c-e92a-4531-92a1-fc4498074af2",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kf3HbG8GlDQTKufM",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Gmail Trigger').item.json.snippet }}",
+        "options": {
+          "systemMessage": "You are a business communication AI agent. Your task is to professionally acknowledge business-related inquiries, confirm receipt, and communicate next steps clearly and concisely while maintaining a formal, business-appropriate tone.\n\n#Tools\nTelegram - send the notification messages to telegram"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        624,
+        64
+      ],
+      "id": "487a90bf-d767-4441-aa51-c6af5f791152",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Gmail Trigger').item.json.snippet }}",
+        "options": {
+          "systemMessage": "You are a customer support AI agent. Your task is to send a professional auto-reply for high-priority customer inquiries, acknowledging receipt, confirming priority, and stating that immediate review is in progress without making guarantees.\n\n#Tools\n\nEmail Draft - use this to send an email reply to a customer, always sign off as SSRAIAutomation"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        864,
+        -128
+      ],
+      "id": "9a804daa-8a77-485a-b3de-1e403409f2d0",
+      "name": "AI Agent2"
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ $fromAI(\"Subject\") }}",
+        "message": "={{ $fromAI(\"emailbody\") }}",
+        "options": {
+          "threadId": "={{ $json.threadId }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        1184,
+        112
+      ],
+      "id": "3085863b-18b5-4b0e-9baa-809a6dfdb443",
+      "name": "Create a draft in Gmail1",
+      "webhookId": "3da2788c-e92a-4531-92a1-fc4498074af2",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kf3HbG8GlDQTKufM",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Gmail Trigger').item.json.snippet }}",
+        "options": {
+          "systemMessage": "You are a promotions AI agent. Your task is to professionally acknowledge promotional inquiries, confirm receipt, and communicate next steps clearly while maintaining a polite, positive, and business-appropriate tone.\n\n#Tools\n\nEmail Draft - use this to send an email reply to mail.always sign off as SSRAIAutomation"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        672,
+        448
+      ],
+      "id": "09c3a3e7-8345-4d7c-93ba-07704378cc22",
+      "name": "AI Agent3"
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ $fromAI(\"Subject\") }}",
+        "message": "={{ $fromAI(\"emailbody\") }}",
+        "options": {
+          "threadId": "={{ $json.threadId }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        864,
+        720
+      ],
+      "id": "fbcf12be-47b5-4cc1-9928-344bf0f21680",
+      "name": "Create a draft in Gmail3",
+      "webhookId": "3da2788c-e92a-4531-92a1-fc4498074af2",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kf3HbG8GlDQTKufM",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ $fromAI(\"Subject\") }}",
+        "message": "={{ $fromAI(\"emailbody\") }}",
+        "options": {
+          "threadId": "={{ $json.threadId }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.2,
+      "position": [
+        912,
+        288
+      ],
+      "id": "82b39933-3ee2-4b94-8d5e-2c7f6d55c2d1",
+      "name": "Create a draft in Gmail2",
+      "webhookId": "3da2788c-e92a-4531-92a1-fc4498074af2",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kf3HbG8GlDQTKufM",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent3",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        [
+          {
+            "node": "high prority",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "customer support",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "business",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "promotion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "high prority": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a draft in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "promotion": {
+      "main": [
+        [
+          {
+            "node": "AI Agent3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "business": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "customer support": {
+      "main": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a draft in Gmail1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a draft in Gmail3": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent3",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a draft in Gmail2": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "e4d20490-42a6-428c-b110-ab199b155492",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2bcc7b79462a3af3db4fa0f535fc9a40b762506d5780931e6b7f5f895a89c067"
+  },
+  "nodeGroups": [],
+  "id": "b8XezvjrTmeIRyay",
+  "tags": []
+}
